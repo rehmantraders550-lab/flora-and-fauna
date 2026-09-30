@@ -1,0 +1,6 @@
+{
+  "name": "Floria — Botanic Architecture",
+  "description": "High-end sculptural floral architecture, Ikebana assemblages, and atmospheric botanical design with real-time parallax physics and bespoke commission studio.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

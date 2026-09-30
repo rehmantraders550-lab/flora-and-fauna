@@ -1,0 +1,81 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --ink: #111411;
+    --paper: #f2efe6;
+    --paper-2: #ebe6da;
+    --navy: #0c1720;
+    --navy-2: #15242d;
+    --moss: #70806b;
+    --line: rgba(17, 20, 17, 0.16);
+    --line-light: rgba(255, 255, 255, 0.18);
+    --serif: "Instrument Serif", Georgia, serif;
+    --sans: "DM Sans", "Plus Jakarta Sans", sans-serif;
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  body {
+    font-family: var(--sans);
+    color: var(--ink);
+    background-color: var(--paper);
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, .font-serif {
+    font-family: var(--serif);
+  }
+}
+
+/* Parallax Layer custom property defaults */
+[data-parallax-speed] {
+  --px: 0px;
+  --py: 0px;
+  --ps: 0px;
+  transform: translate3d(var(--px), calc(var(--py) + var(--ps)), 0);
+  will-change: transform;
+}
+
+@keyframes scrollCue {
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-cue {
+  animation: scrollCue 2.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* Custom Scrollbar for sleek aesthetic */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0c1720;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-parallax-speed] {
+    transform: none !important;
+  }
+  .animate-cue {
+    animation: none !important;
+  }
+}
