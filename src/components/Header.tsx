@@ -1,20 +1,35 @@
 import React, { useState, useEffect } from 'react';
-import { ShoppingBag, Volume2, VolumeX, Sparkles } from 'lucide-react';
+import { ShoppingBag, Volume2, VolumeX, Sparkles, Play, Pause } from 'lucide-react';
 import { soundscape } from '../utils/audioAmbience';
 
 interface HeaderProps {
   bagCount: number;
   onOpenBag: () => void;
   onOpenBespoke: () => void;
+  onNavigate?: (sectionId: string) => void;
+  isDrifting?: boolean;
+  onToggleDrift?: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ bagCount, onOpenBag, onOpenBespoke }) => {
+export const Header: React.FC<HeaderProps> = ({
+  bagCount,
+  onOpenBag,
+  onOpenBespoke,
+  onNavigate,
+  isDrifting = false,
+  onToggleDrift,
+}) => {
   const [isHidden, setIsHidden] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isAudioActive, setIsAudioActive] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
+      // Do not hide header when slow-scroll drifting
+      if (isDrifting) {
+        setIsHidden(false);
+        return;
+      }
       const currentScrollY = window.scrollY;
       if (currentScrollY > 140 && currentScrollY > lastScrollY) {
         setIsHidden(true);
@@ -26,11 +41,21 @@ export const Header: React.FC<HeaderProps> = ({ bagCount, onOpenBag, onOpenBespo
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [lastScrollY]);
+  }, [lastScrollY, isDrifting]);
 
   const handleToggleSound = () => {
     const active = soundscape.toggle();
     setIsAudioActive(active);
+  };
+
+  const handleNavClick = (e: React.MouseEvent, sectionId: string) => {
+    e.preventDefault();
+    if (onNavigate) {
+      onNavigate(sectionId);
+    } else {
+      const el = document.getElementById(sectionId);
+      el?.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   return (
@@ -43,6 +68,7 @@ export const Header: React.FC<HeaderProps> = ({ bagCount, onOpenBag, onOpenBespo
         {/* Brand Zone */}
         <a
           href="#top"
+          onClick={(e) => handleNavClick(e, 'top')}
           className="font-serif text-2xl md:text-3xl tracking-tight hover:opacity-85 transition-opacity"
           aria-label="Floria Home"
         >
@@ -51,13 +77,25 @@ export const Header: React.FC<HeaderProps> = ({ bagCount, onOpenBag, onOpenBespo
 
         {/* Nav Links */}
         <nav className="hidden md:flex items-center gap-8 text-[11px] uppercase tracking-[0.18em] font-medium opacity-85">
-          <a href="#shop" className="hover:opacity-100 transition-opacity">
+          <a
+            href="#shop"
+            onClick={(e) => handleNavClick(e, 'shop')}
+            className="hover:opacity-100 transition-opacity"
+          >
             Collections
           </a>
-          <a href="#architecture" className="hover:opacity-100 transition-opacity">
+          <a
+            href="#architecture"
+            onClick={(e) => handleNavClick(e, 'architecture')}
+            className="hover:opacity-100 transition-opacity"
+          >
             Process
           </a>
-          <a href="#archive" className="hover:opacity-100 transition-opacity">
+          <a
+            href="#archive"
+            onClick={(e) => handleNavClick(e, 'archive')}
+            className="hover:opacity-100 transition-opacity"
+          >
             Archive
           </a>
           <button
@@ -70,7 +108,33 @@ export const Header: React.FC<HeaderProps> = ({ bagCount, onOpenBag, onOpenBespo
         </nav>
 
         {/* Action Controls */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
+          {/* Dynamic Slow Scrolling Drift Control */}
+          {onToggleDrift && (
+            <button
+              onClick={onToggleDrift}
+              title={isDrifting ? 'Pause Slow-Scroll Drift' : 'Enable Ambient Botanical Slow-Scroll'}
+              className={`flex items-center gap-1.5 text-[10px] uppercase tracking-[0.14em] px-2.5 py-1.5 rounded border transition-all cursor-pointer ${
+                isDrifting
+                  ? 'border-emerald-400 bg-emerald-400/20 text-emerald-300'
+                  : 'border-white/20 hover:border-white/50 text-white/70 hover:text-white'
+              }`}
+            >
+              {isDrifting ? (
+                <>
+                  <Pause className="w-3 h-3 text-emerald-400" />
+                  <span className="hidden sm:inline">Drifting</span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                </>
+              ) : (
+                <>
+                  <Play className="w-3 h-3" />
+                  <span className="hidden sm:inline">Slow Drift</span>
+                </>
+              )}
+            </button>
+          )}
+
           {/* Soundscape Ambient Audio Surprise */}
           <button
             onClick={handleToggleSound}

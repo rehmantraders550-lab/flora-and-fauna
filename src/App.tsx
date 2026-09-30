@@ -24,10 +24,15 @@ import { Toast } from './components/Toast';
 import { PRODUCTS } from './data/floriaData';
 import { Product, ArchiveItem, CartItem } from './types/floria';
 import { useParallax } from './hooks/useParallax';
+import { useSlowScroll } from './hooks/useSlowScroll';
+import { Pause, Sparkles } from 'lucide-react';
 
 export default function App() {
   // Initialize ORVIA physical parallax engine
   useParallax();
+
+  // Initialize dynamic slow-scroll engine and ambient drift
+  const { isDrifting, toggleDrift, scrollToTarget } = useSlowScroll();
 
   const [bagItems, setBagItems] = useState<CartItem[]>([
     { product: PRODUCTS[0], quantity: 1 },
@@ -95,27 +100,37 @@ export default function App() {
     triggerToast(`Initialized commission workspace for “${title}”.`);
   };
 
-  const scrollToSection = (id: string) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
   return (
-    <div className="relative min-h-screen bg-[#f2efe6] selection:bg-[#c7d3c2] selection:text-[#101510] text-[#111411]">
-      {/* Primary Site Navigation */}
+    <div className="relative min-h-screen bg-[#0c1720] selection:bg-[#c7d3c2] selection:text-[#101510] text-[#111411]">
+      {/* Underlying atmospheric botanical depth field that diffuses through translucent frosted ivory glass */}
+      <div
+        className="fixed inset-0 pointer-events-none -z-10"
+        style={{
+          background: `
+            radial-gradient(circle at 18% 30%, rgba(112, 128, 107, 0.26), transparent 45%),
+            radial-gradient(circle at 82% 65%, rgba(210, 186, 133, 0.20), transparent 42%),
+            radial-gradient(circle at 50% 88%, rgba(26, 44, 55, 0.45), transparent 50%),
+            linear-gradient(180deg, #0c1720 0%, #101c24 35%, #0d1720 70%, #081116 100%)
+          `,
+        }}
+      />
+
+      {/* Primary Site Navigation with Dynamic Slow Scroll control */}
       <Header
         bagCount={totalBagCount}
         onOpenBag={() => setIsBagOpen(true)}
         onOpenBespoke={() => setIsBespokeOpen(true)}
+        onNavigate={(id) => scrollToTarget(id, 1800)}
+        isDrifting={isDrifting}
+        onToggleDrift={toggleDrift}
       />
 
       <main id="main">
-        {/* Hero Section */}
+        {/* Hero Section with slow-scrolling actions */}
         <Hero
-          onExploreCollections={() => scrollToSection('shop')}
-          onExploreManifesto={() => scrollToSection('architecture')}
+          onExploreCollections={() => scrollToTarget('shop', 1800)}
+          onExploreManifesto={() => scrollToTarget('architecture', 1900)}
+          onScrollCueClick={() => scrollToTarget('shop', 1800)}
         />
 
         {/* Curated Assemblages */}
@@ -124,7 +139,7 @@ export default function App() {
           onQuickAdd={handleQuickAdd}
           onSelectProduct={(p) => setSelectedProduct(p)}
           onOpenBespoke={() => setIsBespokeOpen(true)}
-          onViewArchive={() => scrollToSection('archive')}
+          onViewArchive={() => scrollToTarget('archive', 2000)}
         />
 
         {/* Architecture & Process */}
@@ -146,8 +161,25 @@ export default function App() {
         <NewsletterSection />
       </main>
 
-      {/* Footer */}
-      <Footer />
+      {/* Responsive Footer with "Blooming in ORVIA GARDENS" */}
+      <Footer onScrollToTop={() => scrollToTarget(0, 2200)} />
+
+      {/* Floating Slow-Scroll Active Indicator HUD */}
+      {isDrifting && (
+        <div className="fixed bottom-6 left-6 z-40 flex items-center gap-3 px-4 py-2.5 rounded-full bg-[#0c1720]/90 backdrop-blur-md border border-white/20 text-[#f8f5ed] shadow-2xl animate-in fade-in duration-300">
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="text-[11px] font-mono uppercase tracking-wider text-white/90">
+            Botanical Drift Active
+          </span>
+          <button
+            onClick={toggleDrift}
+            className="ml-1 p-1 rounded-full hover:bg-white/10 text-white/70 hover:text-white transition-colors cursor-pointer"
+            title="Pause slow drift"
+          >
+            <Pause className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      )}
 
       {/* Interactive Drawers & Modals */}
       <BagDrawer

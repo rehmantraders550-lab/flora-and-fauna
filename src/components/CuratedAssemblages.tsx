@@ -39,8 +39,23 @@ export const CuratedAssemblages: React.FC<CuratedAssemblagesProps> = ({
   const [showMonthSelector, setShowMonthSelector] = useState<boolean>(false);
 
   return (
-    <section id="shop" className="py-24 md:py-36 bg-[#f2efe6] text-[#111411]">
-      <div className="w-[min(92vw,1500px)] mx-auto">
+    <section
+      id="shop"
+      className="relative py-24 md:py-36 bg-[#f4f1e8]/80 backdrop-blur-2xl backdrop-saturate-150 text-[#111411] border-y border-white/60 overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.06)]"
+    >
+      {/* Frosted Glass Specular Ambient Light Reflection */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-70"
+        style={{
+          background: `
+            radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.8), transparent 60%),
+            radial-gradient(circle at 10% 85%, rgba(210, 186, 133, 0.15), transparent 45%),
+            radial-gradient(circle at 90% 20%, rgba(112, 128, 107, 0.15), transparent 45%)
+          `,
+        }}
+      />
+
+      <div className="relative z-10 w-[min(92vw,1500px)] mx-auto">
         {/* Section Header */}
         <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_0.6fr] gap-8 lg:gap-16 items-end pb-12 border-b border-[#111411]/15">
           <div>
@@ -143,7 +158,7 @@ export const CuratedAssemblages: React.FC<CuratedAssemblagesProps> = ({
                 className={`group flex flex-col ${isOffset ? 'md:pt-10' : ''}`}
               >
                 {/* Media Container */}
-                <div className="relative aspect-[3/4] overflow-hidden rounded-2xl md:rounded-3xl bg-[#d9d5ca] shadow-sm transition-all duration-700">
+                <div className="relative aspect-[3/4] overflow-hidden rounded-2xl md:rounded-3xl bg-[#d9d5ca]/80 backdrop-blur-md border border-white/80 shadow-[0_14px_35px_rgba(0,0,0,0.05)] transition-all duration-700">
                   <img
                     src={product.image}
                     alt={product.name}

@@ -4,9 +4,14 @@ import { ArrowDownRight } from 'lucide-react';
 interface HeroProps {
   onExploreCollections: () => void;
   onExploreManifesto: () => void;
+  onScrollCueClick?: () => void;
 }
 
-export const Hero: React.FC<HeroProps> = ({ onExploreCollections, onExploreManifesto }) => {
+export const Hero: React.FC<HeroProps> = ({
+  onExploreCollections,
+  onExploreManifesto,
+  onScrollCueClick,
+}) => {
   return (
     <section
       id="top"
@@ -146,16 +151,18 @@ export const Hero: React.FC<HeroProps> = ({ onExploreCollections, onExploreManif
         01 / 07
       </p>
 
-      {/* Scroll cue */}
-      <div
-        className="absolute z-20 left-6 md:left-12 bottom-8 flex items-center gap-3 text-[10px] uppercase tracking-[0.16em] text-white/50 select-none"
-        aria-hidden="true"
+      {/* Interactive Scroll cue with Dynamic Slow Scroll trigger */}
+      <button
+        onClick={onScrollCueClick || onExploreCollections}
+        type="button"
+        title="Slow-scroll to Curated Assemblages"
+        className="absolute z-20 left-6 md:left-12 bottom-8 flex items-center gap-3 text-[10px] uppercase tracking-[0.16em] text-white/60 hover:text-white transition-colors cursor-pointer group"
       >
-        <span className="w-10 h-[1px] bg-white/30 relative overflow-hidden inline-block">
+        <span className="w-10 h-[1px] bg-white/30 relative overflow-hidden inline-block group-hover:bg-white/60">
           <span className="absolute inset-0 bg-white animate-cue" />
         </span>
         <span>Scroll to explore</span>
-      </div>
+      </button>
     </section>
   );
 };

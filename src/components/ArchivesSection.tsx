@@ -19,8 +19,22 @@ export const ArchivesSection: React.FC<ArchivesSectionProps> = ({ onSelectArchiv
   ];
 
   return (
-    <section id="archive" className="py-24 md:py-36 bg-[#ffffff] text-[#111411]">
-      <div className="w-[min(92vw,1500px)] mx-auto">
+    <section
+      id="archive"
+      className="relative py-24 md:py-36 bg-[#f4f1e8]/82 backdrop-blur-2xl backdrop-saturate-150 text-[#111411] border-y border-white/60 overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.06)]"
+    >
+      {/* Frosted Glass Specular Ambient Light Reflection */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-70"
+        style={{
+          background: `
+            radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.8), transparent 60%),
+            radial-gradient(circle at 85% 90%, rgba(112, 128, 107, 0.15), transparent 45%)
+          `,
+        }}
+      />
+
+      <div className="relative z-10 w-[min(92vw,1500px)] mx-auto">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-12">
           <div>
@@ -32,8 +46,8 @@ export const ArchivesSection: React.FC<ArchivesSectionProps> = ({ onSelectArchiv
             </p>
           </div>
 
-          {/* Clean Segmented Filter Controls */}
-          <div className="flex flex-wrap items-center gap-1.5 p-1 bg-[#f2efe6] rounded-xl self-start md:self-auto">
+          {/* Clean Segmented Filter Controls with frosted styling */}
+          <div className="flex flex-wrap items-center gap-1.5 p-1.5 bg-white/50 backdrop-blur-md rounded-xl border border-white/70 shadow-xs self-start md:self-auto">
             {categories.map((cat) => (
               <button
                 key={cat.id}
